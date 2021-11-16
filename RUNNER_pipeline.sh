@@ -1,4 +1,4 @@
-# The pipeline used to perform RUNNER test in three real datasets of complex diseases
+# The pipeline used to perform RUNNER test in three real datasets of complex diseases in the RUNNER manuscript
 
 java -jar ./kggseq.jar
 --runner-gene-coding #the main parameter to perform RUNNER test
@@ -30,3 +30,7 @@ java -jar ./kggseq.jar
 --min-case-control-freq-ratio 3.0 #When there are control samples, this option can be used to filter out variants at which the alternative allele frequency in cases is less than that in controls multiplied by 3.0
 --gene-freq-score eas #Assign the ancestrally matched population for the analyzed sample 
 --qqplot #Generate QQ plot of p-values by this RUNNER test
+
+#Additional parameters to perform mutation type-specific analysis
+--only-ct-var #Perform RUNNER test by only using C to T (or T to C) mutations
+--ignore-ct-var #Perform RUNNER test by ignoring C to T (or T to C) mutations
