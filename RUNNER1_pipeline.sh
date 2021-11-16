@@ -1,4 +1,4 @@
-# The pipeline used to perform the equal weight version of RUNNER (RUNNER1) test in three real datasets of complex diseases
+# The pipeline used to perform the equal weight version of RUNNER (RUNNER1) test in three real datasets of complex diseases in the RUNNER manuscript
 
 java -jar ./kggseq.jar
 --runner1-gene-coding #the main parameter to perform the equal weight version of RUNNER (RUNNER1) test
