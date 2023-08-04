@@ -1,0 +1,58 @@
+Part1: Perform GGI-RUNNER gene-gene interaction analysis in KGGSeq platform
+
+	Download KGGSeq from our website (http://pmglab.top/kggseq/)
+
+	Usage: Run KGGSeq
+		java -Xmx10g -jar ./kggseq.jar <parameters>
+
+	Parameters:
+		Basic settings:
+			--nt 10	<Set the number of parallel tasks for an analysis job.>
+			--buildver hg19	<or hg38; Set the version of reference human genome build.>
+			--vcf-file /path/to/VCF_file
+			--ped-file /path/to/PED_file
+			--out /path/to/out_file
+		
+		Quality control:
+			--hwe-all 1e-5	<Exclude variants in all subjects with the Hardy-Weinberg test p value <= 1.0E-5.>
+			--max-allele 4	<Ignore variant with alleles over 4.>
+			--gty-dp 8	<Exclude genotypes with the minimal read depth per genotype < 8.>
+			--gty-qual 20	<Exclude genotypes with the minimal genotyping quality (Phred Quality Score) per genotype < 10.>
+			--min-obs-rate 0.8	<Set proportion of minimal observed number of non-missing genotypes in all samples as 80%.>
+			
+		Filter rare non-synonymous variants:
+			--db-gene refgene,gencode	<Annoate gene feature for each variant based on the RefGene database and the GENCODE database.>
+			--gene-feature-in 0,1,2,3,4,5,6	<Filtration according to annotated gene features: 0-Frameshift, 1-Nonframeshift, 2-Start_loss, 3-Stop_loss, 4-Stop_gain, 5-Splicing, 6-missense.>
+			--db-filter gadexome.eas,gadgenome.eas	<Annoate allele frequency for each variant according to the specific panel of gnomAD database. There are 8 ancestrally different panels in gnomAD exome-sequencing database (gadexome): East Asian(eas, n=8,624), South Asian (sas, n=15,391), African/African American(afr, n=7,652), Latino (amr, n=16,791), Finnish(fin, n=11,150), Non-Finnish European(nfe, n=55,860),Ashkenazi Jewish (asj, n=4,925), Other (oth, n=2,743); and 7 panels in gnomAD whole-genome-sequencing database (gadgenome): East Asian(eas, n=881), African/African American(afr, n=4,368), Latino (amr, n=419), Finnish(fin, n=1,747), Non-Finnish European(nfe, n=7,509),Ashkenazi Jewish (asj, n=151), Other (oth, n=491).>
+			--rare-allele-freq 0.01	<Variants with alternative allele frequency >= 0.01 in the reference database(s) will be excluded.>
+			--ignore-cnv	<Ignore copy number variations(CNV).> 
+			
+		Perform GGI-RUNNER gene-gene interaction analysis with rare variants:
+			--runner-digene-coding-interact
+			--gene-freq-score eas	<Calculate the accumulated rare variants allele frequency for a gene based on frequencies from the ancestrally matched population of gnomAD database for the analyzed sample.East Asian(eas), South Asian (sas), African/African American(afr), Latino (amr), Finnish(fin), Non-Finnish European(eur),Ashkenazi Jewish (asj)>
+			--gene-pair-file /path/to/DIEP_SCORES_file
+			--digene-prob 0.9	<Protein-coding gene pairs with DIEP_SCORES over 0.9 will be retained for GGI-RUNNER analysis>
+			--qqplot	<Generate quantile-quantile(QQ) plot based on the P-values produced by GGI-RUNNER analysis>
+		
+		Other useful settings:	
+			--filter-sample-maf-oe 0.03	<Filter out variants with minor allele frequency over or equal to a cutoff (x, e.g., 0.03) in the input samples.>
+			--min-case-control-freq-ratio 2.0	<Filter out variants at which the alternative allele frequency in cases is less than that in controls multiplied by X(e.g., 2.0).>
+			--genes-out SACS,MIPEP,ACOT4,AGXT,KRT6B,KRT74,FBRSL1,POLE,DNAH11,DYNC2H1,FBN1,LAMB1,MYH4,POTEF,COL7A1,COL22A1,MYH8,AGRN,APOB	<Ignore variants within some genes. Here are some genes which were excluded during the type I error simulation experiment using the SG10K dataset as they frequently exhibited significant gene-gene interactions in our preliminary experiments.>
+			
+
+Part 2: Perform gene-gene interaction analysis by GxGrare
+
+	Download GxGrare from http://bibs.snu.ac.kr/software/gxgrare/
+
+	Usage:Run GxGrare
+		./gxgrare --in /path/to/input_file  --out /path/to/out_file --perm 1000000
+		
+Part3: Perform SNP-SNP epistasis test by PLINK
+
+	Download PLINK(v1.90 beta6.26 Linux64-bit) from https://www.cog-genomics.org/plink/1.9/
+
+	Usage1: test for epistasis use the --epistasis command
+		./plink --bed /path/to/plink.bed_file --bim /path/to/plink.bim_file --fam /path/to/plink.fam_file --out /path/to/out_file --epistasis --epi1 1 
+
+	Usage2: test for epistasis use the --fast-epistasis command
+		./plink --bed /path/to/plink.bed_file --bim /path/to/plink.bim_file --fam /path/to/plink.fam_file --out /path/to/out_file --fast-epistasis --epi1 1 
